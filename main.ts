@@ -43,6 +43,14 @@ function assertValidLine(line: string): void {
   if (/[\r\n]/.test(line)) {
     throw new Error("Line must not contain carriage returns or newlines.");
   }
+  // Reject control characters (e.g. tabs, NUL) that would corrupt the entry.
+  if (/[\x00-\x1F\x7F]/.test(line)) {
+    throw new Error("Line must not contain control characters.");
+  }
+  // Reject consecutive double spaces; the line uses single spaces only.
+  if (/  /.test(line)) {
+    throw new Error("Line must not contain consecutive double spaces.");
+  }
 }
 
 assertValidLine(LINE);
